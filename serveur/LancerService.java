@@ -14,3 +14,5 @@ public class LancerService {
         reg.rebind("distributeur",rd);
     }
 }
+
+

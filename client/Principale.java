@@ -13,11 +13,28 @@ public class Principale {
         if(args.length > 1)
             port=Integer.parseInt(args[1]);
             
-        Registry reg = LocateRegistry.getRegistry(serveur,port);
+		Registry reg = null;	
+		try {
+			 reg = LocateRegistry.getRegistry(serveur,port);
+		} catch (RemoteException e) {
+			System.out.println("Aucun registre trouvé");
+		}
+
         String[] list = reg.list();
+
         System.out.println("Liste des Service :");
+
         for(int i=0 ; i<list.length;i++)System.out.println("* "+list[i]); 
-        ServiceDistributeur produitMatrice = (ServiceDistributeur) reg.lookup("distributeur");
+
+		ServiceDistributeur produitMatrice = null;
+		try {
+             produitMatrice = (ServiceDistributeur) reg.lookup("distributeur");
+        } catch (NotBoundException e) {
+            System.out.println("Le nom du service est éronné");
+        } catch (RemoteException e){
+			System.out.println("La référence du service n'as pas pu etre cree");
+		}
+		
 
 
         Scanner sc = new Scanner(System.in);
@@ -39,7 +56,7 @@ public class Principale {
 		int NombreColonne2 = sc.nextInt();
 
         if(NombreColonne1 != NombreLigne2){
-            throw new Error("Multiplication de la matrice impossible car le nombre de ligne de la Matrice1 et differents du nombre de colonne de la matrice 2");
+            throw new Error("Multiplication de la matrice impossible car le nombre de ligne de la matrice 1 et differents du nombre de colonne de la matrice 2");
         }
 
 		double Matrice1[][] = new double[NombreLigne1][NombreColonne1 ];
